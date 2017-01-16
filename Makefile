@@ -9,5 +9,5 @@ flake:
 
 checks: types flake
 
-tests:
+test:
 	py.test
