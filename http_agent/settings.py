@@ -1,19 +1,12 @@
 from os.path import expandvars, join, dirname
 from types import MappingProxyType
+from typing import Union
 import sys
 import warnings
 import yaml
 
 
-try:
-    from dotenv import load_dotenv
-    with_dotenv = True
-except ImportError:
-    warnings.warn("No dotenv package found: getting settings from environment.")
-    with_dotenv = False
-
-
-def bool_if_bool_string(string):
+def bool_if_bool_string(string: str) -> Union[str, bool]:
     normalized = string.strip().lower()
     if normalized == 'true':
         return True
@@ -22,13 +15,14 @@ def bool_if_bool_string(string):
     return string
 
 
-def expand_nested_vars(mapping):
-    new = {}
+def expand_nested_vars(mapping: dict) -> dict:
+    new = {}  # change to `new: dict` after flake8>=3.3.0
     for k, v in mapping.items():
         if hasattr(v, 'items'):
             new[k] = expand_nested_vars(v)
         elif isinstance(v, str):
-            new[k] = bool_if_bool_string(expandvars(v))
+            # check types once new has type declaration
+            new[k] = bool_if_bool_string(expandvars(v))  # type: ignore
         elif hasattr(v, '__iter__'):
             new[k] = type(v)(expandvars(i) if isinstance(i, str) else i for i in v)
         else:
@@ -46,6 +40,13 @@ def get_config_path() -> str:
 
 
 def build_settings() -> MappingProxyType:
+    try:
+        from dotenv import load_dotenv
+        with_dotenv = True
+    except ImportError:
+        warnings.warn("No dotenv package found: getting settings from environment.")
+        with_dotenv = False
+
     path = ''
     try:
         path = get_config_path()

@@ -5,9 +5,9 @@ types:
 	mypy --fast-parser --silent-imports --python-version 3.6 .
 
 flake:
-	flake8
+	python -m flake8
 
 checks: types flake
 
-test:
+tests:
 	py.test
