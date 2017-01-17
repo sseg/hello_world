@@ -1,0 +1,10 @@
+attrs
+falcon
+gunicorn
+jsl
+jsonschema
+pymysql
+pyyaml
+sqlalchemy
+structlog
+ujson

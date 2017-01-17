@@ -1,0 +1,33 @@
+logging:
+  version: 1
+  formatters:
+    detail:
+      format: "{asctime} [{process}] {levelname:5.5} [{name}] {message}"
+      style: "{"
+    simple: {}
+  handlers:
+    console:
+      class: logging.StreamHandler
+      formatter: detail
+      stream: ext://sys.stdout
+  root:
+    level: $ROOT_LOG_LEVEL
+    handlers:
+      - console
+  loggers:
+    kernel: {}
+    http_agent: {}
+    gunicorn:
+      level: INFO
+
+headers:
+  request_attribution_id: Request-Id
+
+kernel:
+  db_settings:
+    user: $DB_USER
+    password: $DB_PASSWORD
+    host: $DB_HOST
+    database: hello_world
+    create_tables: $DB_CREATE_TABLES
+    debug: $DB_DEBUG
