@@ -1,6 +1,6 @@
 from os.path import expandvars, join, dirname
 from types import MappingProxyType
-from typing import Union
+from typing import Union, Callable
 import sys
 import warnings
 import yaml
@@ -39,22 +39,24 @@ def get_config_path() -> str:
     return path
 
 
-def build_settings() -> MappingProxyType:
+def get_env_loader() -> Callable:
     try:
         from dotenv import load_dotenv
-        with_dotenv = True
+        return load_dotenv
     except ImportError:
         warnings.warn("No dotenv package found: getting settings from environment.")
-        with_dotenv = False
+    return lambda file: None
 
+
+def build_settings() -> MappingProxyType:
+    load_dotenv = get_env_loader()
     path = ''
     try:
         path = get_config_path()
         with open(path) as fp:
             base = yaml.safe_load(fp.read())
-        if with_dotenv:
-            dotenv_path = join(dirname(path), '.env')
-            load_dotenv(dotenv_path)
+        dotenv_path = join(dirname(path), '.env')
+        load_dotenv(dotenv_path)
         as_dict = expand_nested_vars(base)
         return MappingProxyType(as_dict)
     except Exception as err:
