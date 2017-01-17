@@ -17,7 +17,7 @@ def parse_accept_header(header: str) -> Tuple[str, int]:
                         'For example: `*/*; version=1`'.format(
                             accept_header_value=header
                         )
-        )
+        ) from err
 
 
 class AcceptMiddleware:

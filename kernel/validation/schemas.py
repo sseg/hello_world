@@ -20,6 +20,7 @@ class DoGreetingArgs(jsl.Document):
         required=True
     )
 
+
 greeting_schema = Greeting.get_schema()
 greeting_patch_schema = GreetingPatch.get_schema()
 do_greeting_schema = DoGreetingArgs.get_schema()

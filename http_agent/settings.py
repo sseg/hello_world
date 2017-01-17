@@ -13,18 +13,22 @@ except ImportError:
     with_dotenv = False
 
 
+def bool_if_bool_string(string):
+    normalized = string.strip().lower()
+    if normalized == 'true':
+        return True
+    if normalized == 'false':
+        return False
+    return string
+
+
 def expand_nested_vars(mapping):
     new = {}
     for k, v in mapping.items():
         if hasattr(v, 'items'):
             new[k] = expand_nested_vars(v)
         elif isinstance(v, str):
-            new[k] = expandvars(v)
-            normalized = new[k].strip().lower()
-            if normalized == 'true':
-                new[k] = True
-            if normalized == 'false':
-                new[k] = False
+            new[k] = bool_if_bool_string(expandvars(v))
         elif hasattr(v, '__iter__'):
             new[k] = type(v)(expandvars(i) if isinstance(i, str) else i for i in v)
         else:

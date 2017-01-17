@@ -1,3 +1,4 @@
+from typing import Callable
 from kernel.validation.schemas import (
     greeting_schema,
     greeting_patch_schema,
@@ -7,7 +8,7 @@ from kernel.validation import validate_input
 from kernel.repos import greetings_repo
 
 
-def add(resource):
+def add(resource: dict) -> Callable:
     validate_input(resource, greeting_schema)
 
     def scoped(**context):
@@ -24,7 +25,7 @@ def add(resource):
     return scoped
 
 
-def get(id):
+def get(id: str) -> Callable:
     def scoped(**context):
         data = greetings_repo.get_one(context['db'], id)
         return greetings_repo.Greeting.to_display(data)
