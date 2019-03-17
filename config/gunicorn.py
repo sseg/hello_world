@@ -16,6 +16,7 @@ graceful_timeout = timeout
 max_requests = 10_000
 max_request_jitter = max_requests / 10
 accesslog = '-'
+request_attr_header = os.environ['REQUEST_ATTR_ID']
 access_log_format = (
     "ip='%(h)s' request='%(r)s' response_status=%(s)s "
     "resp_size_bytes=%(b)s elapsed_us=%(D)s request_id='%({Request-Id}o)s' "
